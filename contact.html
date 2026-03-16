@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contact • ENEC Platform</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">☢ ENEC Platform</div>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="news.html">News</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="co2-model.html">CO₂ Model</a>
+<a href="experts.html">Experts</a>
+<a href="contact.html">Contact</a>
+</nav>
+
+</header>
+
+
+<section class="contact-hero">
+
+<h1>Contact the ENEC Communication Team</h1>
+
+<p>
+For collaboration, research partnership, or nuclear energy innovation discussions.
+</p>
+
+</section>
+
+
+<section class="contact-container">
+
+
+<div class="contact-card">
+
+<h2>Direct Contact</h2>
+
+<a class="contact-btn call" href="tel:+251974045114">
+📞 Call Now
+</a>
+
+<a class="contact-btn whatsapp" href="https://wa.me/251974045114">
+💬 WhatsApp
+</a>
+
+<a class="contact-btn email" href="mailto:eto.fkr@gmail.com">
+✉ Send Email
+</a>
+
+<a class="contact-btn facebook" 
+href="https://www.facebook.com/profile.php?id=61583809239537"
+target="_blank">
+🌐 Facebook
+</a>
+<div class="location-box">
+
+<h3>📍 Office Location</h3>
+
+<p>
+Wolo Sefer, Addis Ababa, Ethiopia
+</p>
+
+<a class="map-btn"
+href="https://www.google.com/maps?q=9.035829,38.752411"
+target="_blank">
+Open Map Location
+</a>
+
+</div>
+</div>
+
+
+<div class="contact-card">
+
+<h2>Send Message</h2>
+
+<form class="contact-form" id="contactForm">
+
+<input type="text" id="name" placeholder="Your Name" required>
+
+<input type="email" id="email" placeholder="Email Address" required>
+
+<textarea id="message" placeholder="Your Message" rows="5"></textarea>
+
+<button type="submit">Send Message</button>
+
+</form>
+
+<div id="successMessage" class="success-box">
+
+<span class="checkmark">✓</span>
+
+<div>
+<strong>Message Sent Successfully</strong>
+<p>Our team will respond soon.</p>
+</div>
+
+</div>
+</div>
+
+</section>
+
+
+<footer>
+
+<p>©2026 Ethiopian Nuclear Energy Commission</p>
+
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+(function(){
+emailjs.init("isPH5o2lV447q37Wd");
+})();
+</script>
+<script src="js/contact.js"></script>
+
+</body>
+
+</html>

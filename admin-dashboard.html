@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Ethiopia Nuclear Energy Commission - Admin</title>
+
+<link rel="stylesheet" href="css/admin.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<h1>⚛ Ethiopia Nuclear Energy Commission</h1>
+<p>Admin Control Center</p>
+
+<button onclick="goDashboard()">Dashboard</button>
+
+</header>
+
+<div class="dashboard">
+
+<div class="editor">
+
+<h2>Publish New Article</h2>
+
+<input id="title" placeholder="Article Title">
+
+<textarea id="content" placeholder="Write the full article here..."></textarea>
+
+<input type="file" id="files" multiple>
+
+<div id="preview"></div>
+
+<button onclick="publishNews()">Publish News</button>
+
+<hr>
+
+<h2>All Published Articles</h2>
+
+<div id="newsList"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="js/admin.js"></script>
+
+</body>
+
+</html>
