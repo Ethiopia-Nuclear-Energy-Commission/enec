@@ -30,9 +30,12 @@ app.use("/uploads", express.static("uploads"));
    CONNECT TO MONGODB
 ------------------------------*/
 
-mongoose.connect(process.env.MONGO_URI)
-.then(()=> console.log("MongoDB Connected"))
-.catch(err=> console.log(err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(()=> console.log("✅ MongoDB Connected"))
+.catch(err=> console.log("❌ MongoDB Connection Error:", err));
 
 /* -----------------------------
    ADMIN MODEL
@@ -207,6 +210,7 @@ res.json(news);
 
 }catch(error){
 
+console.log("❌ Error fetching news:", error);
 res.status(500).send("Error fetching news");
 
 }
@@ -257,8 +261,8 @@ res.status(500).send("Update failed");
    START SERVER
 ------------------------------*/
 
-app.listen(5000, () => {
+const PORT = process.env.PORT || 5000;
 
-console.log("Server running on port 5000");
-
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
