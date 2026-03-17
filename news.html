@@ -134,12 +134,15 @@ opacity:0.6;
 
 <script>
 
-async function loadNews(){
+const API_BASE = "https://enec.onrender.com";
 
-const res = await fetch("http://localhost:5000/news");
+async function loadNews(){
+try{
+const res = await fetch(`${API_BASE}/news`);
 const news = await res.json();
 
 const container = document.getElementById("news-container");
+container.innerHTML = "";
 
 news.forEach(n=>{
 
@@ -153,20 +156,15 @@ if(n.files){
 n.files.forEach(file=>{
 
 if(file.endsWith(".mp4")){
-
-videos += `<video controls src="http://localhost:5000/uploads/${file}"></video>`;
-
+videos += `<video controls src="${API_BASE}/uploads/${file}"></video>`;
 }
 
 else if(file.endsWith(".pdf")){
-
-docs += `<a href="http://localhost:5000/uploads/${file}" target="_blank">📄 View Document</a>`;
-
+docs += `<a href="${API_BASE}/uploads/${file}" target="_blank">📄 View Document</a>`;
 }
 
 else{
-
-images += `<img onclick="openLightbox(this.src)" src="http://localhost:5000/uploads/${file}">`;
+images += `<img onclick="openLightbox(this.src)" src="${API_BASE}/uploads/${file}">`;
 }
 
 });
@@ -178,46 +176,45 @@ ${videos}
 ${docs}
 </div>
 `;
-
 }
-container.innerHTML += `
 
+container.innerHTML += `
 <div class="news-card">
 
 <div class="news-title">${n.title}</div>
 
-<div class="news-media">
 ${mediaHTML}
-</div>
 
 <div class="news-content">
 ${n.content.replace(/\n/g,"<br><br>")}
 </div>
 
 </div>
-
 `;
 
 });
 
+}catch(err){
+document.getElementById("news-container").innerHTML =
+"<p style='text-align:center;color:red;'>Failed to load news</p>";
+console.error(err);
+}
 }
 
 loadNews();
-function openLightbox(src){
 
+function openLightbox(src){
 const lightbox = document.getElementById("lightbox");
 const img = document.getElementById("lightbox-img");
 
 img.src = src;
 lightbox.style.display = "flex";
-
 }
 
 function closeLightbox(){
-
 document.getElementById("lightbox").style.display = "none";
-
 }
+
 </script>
 <!-- IMAGE LIGHTBOX -->
 
