@@ -50,20 +50,17 @@ const Admin = mongoose.model("Admin",AdminSchema);
 // ✅ CREATE DEFAULT ADMIN (RUNS ON SERVER START)
 const createAdmin = async () => {
   try {
-    const existing = await Admin.findOne({ username: "admin" });
 
-    if (!existing) {
-      const hashedPassword = await bcrypt.hash("admin123", 10);
+    const hashedPassword = await bcrypt.hash("admin123", 10);
 
-      await Admin.create({
-        username: "admin",
-        password: hashedPassword
-      });
+    await Admin.findOneAndUpdate(
+      { username: "admin" },
+      { password: hashedPassword },
+      { upsert: true }
+    );
 
-      console.log("✅ Default admin created");
-    } else {
-      console.log("⚠️ Admin already exists");
-    }
+    console.log("✅ Admin RESET: admin / admin123");
+
   } catch (error) {
     console.log("❌ Error creating admin:", error);
   }
