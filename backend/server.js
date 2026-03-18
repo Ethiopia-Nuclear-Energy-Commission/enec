@@ -168,7 +168,7 @@ return res.status(401).send("Invalid or expired token");
 ------------------------------*/
 
 // CREATE NEWS
-app.post("/news", verifyAdmin, upload.array("files",10), async (req,res)=>{
+app.post("/news", upload.array("files",10), async (req,res)=>{
 
 const {title,content} = req.body;
 
