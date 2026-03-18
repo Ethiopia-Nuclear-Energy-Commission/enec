@@ -6,6 +6,16 @@ const API_BASE = window.location.hostname === "localhost"
   : "https://enec.onrender.com";
 
 // ===============================
+// CHECK AUTH (VERY IMPORTANT)
+// ===============================
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+  alert("Please login first");
+  window.location.href = "admin-login.html";
+}
+
+// ===============================
 // FILE HANDLING
 // ===============================
 let selectedFiles = [];
@@ -84,15 +94,26 @@ async function publishNews() {
 
   try {
 
-    await fetch(url, {
+    const res = await fetch(url, {
       method: method,
-      body: editingId
-        ? JSON.stringify({ title, content })
-        : formData,
-      headers: editingId
-        ? { "Content-Type": "application/json" }
-        : undefined
+      headers: {
+        ...(editingId ? { "Content-Type": "application/json" } : {}),
+        "Authorization": `Bearer ${token}`
+      },
+      body: editingId ? JSON.stringify({ title, content }) : formData
     });
+
+    const data = await res.text();
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        alert("Session expired. Please login again.");
+        localStorage.removeItem("adminToken");
+        window.location.href = "admin-login.html";
+        return;
+      }
+      throw new Error(data);
+    }
 
     alert(editingId ? "News Updated Successfully" : "News Published Successfully");
 
@@ -108,7 +129,7 @@ async function publishNews() {
 
   } catch (error) {
     console.error(error);
-    alert("Error publishing news");
+    alert("Error: " + error.message);
   }
 
 }
@@ -163,7 +184,7 @@ async function loadNews() {
 loadNews();
 
 // ===============================
-// DELETE NEWS
+// DELETE NEWS (FIXED TOKEN)
 // ===============================
 async function deleteNews(id) {
 
@@ -171,16 +192,31 @@ async function deleteNews(id) {
 
   try {
 
-    await fetch(`${API_BASE}/news/${id}`, {
-      method: "DELETE"
+    const res = await fetch(`${API_BASE}/news/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
     });
+
+    const data = await res.text();
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        alert("Session expired. Please login again.");
+        localStorage.removeItem("adminToken");
+        window.location.href = "admin-login.html";
+        return;
+      }
+      throw new Error(data);
+    }
 
     alert("News deleted");
     loadNews();
 
   } catch (error) {
     console.error(error);
-    alert("Error deleting news");
+    alert("Error deleting news: " + error.message);
   }
 
 }

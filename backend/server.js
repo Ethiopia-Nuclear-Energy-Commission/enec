@@ -31,7 +31,10 @@ app.use("/uploads", express.static("uploads"));
 ------------------------------*/
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
+  .then(async () => {
+    console.log("✅ MongoDB Connected");
+    await createAdmin(); // 👈 ADD THIS LINE
+  })
   .catch(err => console.log("❌ MongoDB Connection Error:", err));
 
 /* -----------------------------
@@ -44,6 +47,27 @@ password:String
 });
 
 const Admin = mongoose.model("Admin",AdminSchema);
+// ✅ CREATE DEFAULT ADMIN (RUNS ON SERVER START)
+const createAdmin = async () => {
+  try {
+    const existing = await Admin.findOne({ username: "admin" });
+
+    if (!existing) {
+      const hashedPassword = await bcrypt.hash("admin123", 10);
+
+      await Admin.create({
+        username: "admin",
+        password: hashedPassword
+      });
+
+      console.log("✅ Default admin created");
+    } else {
+      console.log("⚠️ Admin already exists");
+    }
+  } catch (error) {
+    console.log("❌ Error creating admin:", error);
+  }
+};
 
 /* -----------------------------
    EMAIL FUNCTION (UNCHANGED)
@@ -144,11 +168,13 @@ res.status(500).send("Server error");
 
 function verifyAdmin(req,res,next){
 
-const token = req.headers.authorization;
+const authHeader = req.headers.authorization;
 
-if(!token){
+if(!authHeader){
 return res.status(401).send("Access denied. No token provided.");
 }
+
+const token = authHeader.split(" ")[1];
 
 try{
 
