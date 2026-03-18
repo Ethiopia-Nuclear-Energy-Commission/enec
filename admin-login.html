@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Admin Login</title>
+<title>ENEC Admin Login</title>
 
 <style>
 
 body{
-background:#0b0f1a;
-font-family:Arial;
+margin:0;
+font-family:Arial, sans-serif;
+background: linear-gradient(135deg,#0b0f1a,#020617);
 display:flex;
 justify-content:center;
 align-items:center;
@@ -19,26 +19,64 @@ color:white;
 .login-box{
 background:#111827;
 padding:40px;
-border-radius:10px;
-width:320px;
+border-radius:15px;
+width:350px;
 text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+h2{
+margin-bottom:20px;
 }
 
 input{
 width:100%;
-padding:10px;
+padding:12px;
 margin:10px 0;
 border:none;
-border-radius:5px;
+border-radius:8px;
+background:#1f2937;
+color:white;
+font-size:14px;
+}
+
+input:focus{
+outline:none;
+border:1px solid #00f0ff;
 }
 
 button{
 background:#00f0ff;
 border:none;
-padding:10px;
+padding:12px;
 width:100%;
 cursor:pointer;
 font-weight:bold;
+border-radius:8px;
+transition:0.3s;
+font-size:15px;
+}
+
+button:hover{
+background:#00c8d8;
+}
+
+button:disabled{
+background:gray;
+cursor:not-allowed;
+}
+
+#msg{
+margin-top:15px;
+font-size:14px;
+color:#f87171;
+}
+
+.loader{
+margin-top:10px;
+display:none;
+font-size:13px;
+color:#9ca3af;
 }
 
 </style>
@@ -49,12 +87,14 @@ font-weight:bold;
 
 <div class="login-box">
 
-<h2>Admin Login</h2>
+<h2>ENEC Admin</h2>
 
 <input id="username" placeholder="Username">
 <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+<button id="loginBtn" onclick="login()">Login</button>
+
+<div class="loader" id="loader">Logging in...</div>
 
 <p id="msg"></p>
 
@@ -64,40 +104,58 @@ font-weight:bold;
 
 async function login(){
 
-const username = document.getElementById("username").value;
-const password = document.getElementById("password").value;
+const btn = document.getElementById("loginBtn");
+const loader = document.getElementById("loader");
+const msg = document.getElementById("msg");
+
+msg.innerText = "";
+btn.disabled = true;
+loader.style.display = "block";
+
+const username = document.getElementById("username").value.trim();
+const password = document.getElementById("password").value.trim();
+
+if(!username || !password){
+msg.innerText = "Please enter username and password";
+btn.disabled = false;
+loader.style.display = "none";
+return;
+}
 
 try{
 
-const response = await fetch("https://enec.onrender.com/news i",{
-
+const response = await fetch("https://enec.onrender.com/login",{
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
-body:JSON.stringify({username,password})
-
+body: JSON.stringify({username,password})
 });
 
 const data = await response.json();
 
-console.log(data); // debug
+if(response.ok){
 
-if(data.token){
+localStorage.setItem("token", data.token);
 
-localStorage.setItem("adminToken",data.token);
-
-window.location.href="admin-dashboard.html";
+// small delay for UX
+setTimeout(()=>{
+window.location.href = "admin-dashboard.html";
+},500);
 
 }else{
 
-document.getElementById("msg").innerText = data;
+msg.innerText = data || "Invalid username or password";
+btn.disabled = false;
+loader.style.display = "none";
 
 }
 
 }catch(error){
+
+msg.innerText = "Server error. Please try again.";
+btn.disabled = false;
+loader.style.display = "none";
 
 console.log(error);
 
