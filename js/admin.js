@@ -1,157 +1,203 @@
+// ===============================
+// API BASE (AUTO SWITCH LOCAL / LIVE)
+// ===============================
+const API_BASE = window.location.hostname === "localhost"
+  ? "http://localhost:5000"
+  : "https://enec.onrender.com";
+
+// ===============================
+// FILE HANDLING
+// ===============================
 let selectedFiles = [];
 
-document.getElementById("files").addEventListener("change", function(){
+document.getElementById("files").addEventListener("change", function () {
 
-const preview = document.getElementById("preview");
+  const preview = document.getElementById("preview");
 
-for(let file of this.files){
+  for (let file of this.files) {
 
-selectedFiles.push(file);
+    selectedFiles.push(file);
 
-const div = document.createElement("div");
+    const div = document.createElement("div");
 
-div.innerHTML = `
-${file.name}
-<button onclick="removeFile('${file.name}')">Remove</button>
-`;
+    div.innerHTML = `
+      ${file.name}
+      <button onclick="removeFile('${file.name}')">Remove</button>
+    `;
 
-preview.appendChild(div);
-
-}
-
-});
-
-function removeFile(name){
-
-selectedFiles = selectedFiles.filter(f => f.name !== name);
-
-const preview = document.getElementById("preview");
-
-preview.innerHTML="";
-
-selectedFiles.forEach(file=>{
-
-const div=document.createElement("div");
-
-div.innerHTML=`
-${file.name}
-<button onclick="removeFile('${file.name}')">Remove</button>
-`;
-
-preview.appendChild(div);
+    preview.appendChild(div);
+  }
 
 });
 
+// Remove file
+function removeFile(name) {
+
+  selectedFiles = selectedFiles.filter(f => f.name !== name);
+
+  const preview = document.getElementById("preview");
+  preview.innerHTML = "";
+
+  selectedFiles.forEach(file => {
+
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+      ${file.name}
+      <button onclick="removeFile('${file.name}')">Remove</button>
+    `;
+
+    preview.appendChild(div);
+
+  });
+
 }
 
+// ===============================
+// CREATE / UPDATE NEWS
+// ===============================
 let editingId = null;
 
-async function publishNews(){
+async function publishNews() {
 
-const title=document.getElementById("title").value;
-const content=document.getElementById("content").value;
+  const title = document.getElementById("title").value;
+  const content = document.getElementById("content").value;
 
-const formData=new FormData();
+  if (!title || !content) {
+    alert("Title and Content are required!");
+    return;
+  }
 
-formData.append("title",title);
-formData.append("content",content);
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("content", content);
 
-selectedFiles.forEach(file=>{
-formData.append("files",file);
-});
+  selectedFiles.forEach(file => {
+    formData.append("files", file);
+  });
 
-const url = editingId 
-? `http://localhost:5000/news/${editingId}`
-: "http://localhost:5000/news";
+  const url = editingId
+    ? `${API_BASE}/news/${editingId}`
+    : `${API_BASE}/news`;
 
-const method = editingId ? "PUT" : "POST";
+  const method = editingId ? "PUT" : "POST";
 
-await fetch(url,{
-method:method,
-body: editingId ? JSON.stringify({title,content}) : formData,
-headers: editingId ? {"Content-Type":"application/json"} : undefined
-});
+  try {
 
-alert(editingId ? "News Updated Successfully" : "News Published Successfully");
+    await fetch(url, {
+      method: method,
+      body: editingId
+        ? JSON.stringify({ title, content })
+        : formData,
+      headers: editingId
+        ? { "Content-Type": "application/json" }
+        : undefined
+    });
 
-editingId = null;
+    alert(editingId ? "News Updated Successfully" : "News Published Successfully");
 
-selectedFiles = [];
+    // Reset
+    editingId = null;
+    selectedFiles = [];
 
-loadNews();
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+    document.getElementById("preview").innerHTML = "";
 
-}
+    loadNews();
 
-async function loadNews(){
-
-const res = await fetch("http://localhost:5000/news");
-
-const news = await res.json();
-
-const container = document.getElementById("newsList");
-
-container.innerHTML="";
-
-news.forEach(n=>{
-
-const card = document.createElement("div");
-
-card.className = "newsCard";
-
-card.innerHTML = `
-
-<h3>${n.title}</h3>
-
-<p>${n.content.substring(0,150)}...</p>
-
-<div class="cardButtons">
-
-<button class="editBtn">Edit</button>
-<button class="deleteBtn">Delete</button>
-
-</div>
-
-`;
-
-card.querySelector(".editBtn").onclick = () => editNews(n._id,n.title,n.content);
-
-card.querySelector(".deleteBtn").onclick = () => deleteNews(n._id);
-
-container.appendChild(card);
-
-});
+  } catch (error) {
+    console.error(error);
+    alert("Error publishing news");
+  }
 
 }
 
-loadNews();
+// ===============================
+// LOAD NEWS
+// ===============================
+async function loadNews() {
 
-async function deleteNews(id){
+  try {
 
-if(!confirm("Delete this article?")) return;
+    const res = await fetch(`${API_BASE}/news`);
+    const news = await res.json();
 
-await fetch(`http://localhost:5000/news/${id}`,{
+    const container = document.getElementById("newsList");
+    container.innerHTML = "";
 
-method:"DELETE"
+    news.forEach(n => {
 
-});
+      const card = document.createElement("div");
+      card.className = "newsCard";
 
-alert("News deleted");
+      card.innerHTML = `
+        <h3>${n.title}</h3>
+        <p>${n.content.substring(0, 150)}...</p>
 
-loadNews();
+        <div class="cardButtons">
+          <button class="editBtn">Edit</button>
+          <button class="deleteBtn">Delete</button>
+        </div>
+      `;
+
+      card.querySelector(".editBtn").onclick = () =>
+        editNews(n._id, n.title, n.content);
+
+      card.querySelector(".deleteBtn").onclick = () =>
+        deleteNews(n._id);
+
+      container.appendChild(card);
+
+    });
+
+  } catch (error) {
+    console.error(error);
+    document.getElementById("newsList").innerHTML =
+      "<p style='color:red;'>Failed to load news</p>";
+  }
 
 }
 
-function editNews(id,title,content){
+// Load on start
+loadNews();
 
-editingId = id;
+// ===============================
+// DELETE NEWS
+// ===============================
+async function deleteNews(id) {
 
-document.getElementById("title").value = title;
+  if (!confirm("Delete this article?")) return;
 
-document.getElementById("content").value = content;
+  try {
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+    await fetch(`${API_BASE}/news/${id}`, {
+      method: "DELETE"
+    });
+
+    alert("News deleted");
+    loadNews();
+
+  } catch (error) {
+    console.error(error);
+    alert("Error deleting news");
+  }
+
+}
+
+// ===============================
+// EDIT NEWS
+// ===============================
+function editNews(id, title, content) {
+
+  editingId = id;
+
+  document.getElementById("title").value = title;
+  document.getElementById("content").value = content;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 
 }
