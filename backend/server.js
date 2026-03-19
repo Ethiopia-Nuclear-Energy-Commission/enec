@@ -6,25 +6,17 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
 const News = require("./News"); // ✅ moved here
 const multer = require("multer");
-const path = require("path");
 
-const storage = multer.diskStorage({
-destination: "./uploads/",
-filename: function (req, file, cb) {
-cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-}
-});
-
-const upload = multer({ storage: storage });
+// ====================== MULTER CHANGED TO MEMORY STORAGE (NO DISK) ======================
+const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+// REMOVED: app.use("/uploads", express.static("uploads"));  ← no longer needed
 
 /* -----------------------------
    CONNECT TO MONGODB
@@ -190,19 +182,27 @@ return res.status(401).send("Invalid or expired token");
    NEWS API
 ------------------------------*/
 
-// CREATE NEWS
+// CREATE NEWS  ← UPDATED TO STORE IMAGES DIRECTLY IN MONGODB AS BASE64
 app.post("/news", verifyAdmin, upload.array("files",10), async (req,res)=>{
 
 const {title,content} = req.body;
 
-const files = req.files ? req.files.map(f => f.filename) : [];
+const imageDataUrls = [];
+
+if (req.files && req.files.length > 0) {
+  for (const file of req.files) {
+    const base64 = file.buffer.toString("base64");
+    const dataUrl = `data:${file.mimetype};base64,${base64}`;
+    imageDataUrls.push(dataUrl);
+  }
+}
 
 try{
 
 const news = new News({
 title:title,
 content:content,
-files:files
+files: imageDataUrls   // ← now stores full image data inside MongoDB
 });
 
 await news.save();
@@ -219,7 +219,7 @@ res.status(500).send("Error publishing news");
 });
 
 
-// GET ALL NEWS
+// GET ALL NEWS (unchanged)
 app.get("/news", async (req,res)=>{
 
 try{
@@ -238,7 +238,7 @@ res.status(500).send("Error fetching news");
 });
 
 
-// DELETE NEWS
+// DELETE NEWS (unchanged)
 app.delete("/news/:id", verifyAdmin, async (req,res)=>{
 
 try{
@@ -256,7 +256,7 @@ res.status(500).send("Delete failed");
 });
 
 
-// UPDATE NEWS (EDIT)
+// UPDATE NEWS (EDIT) (unchanged - only title & content)
 app.put("/news/:id", verifyAdmin, async (req,res)=>{
 
 const {title,content} = req.body;
