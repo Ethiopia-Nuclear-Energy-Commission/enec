@@ -136,12 +136,12 @@ const data = await response.json();
 
 if(response.ok){
 
-localStorage.setItem("token", data.token);
+localStorage.setItem("adminToken", data.token);
 
 // small delay for UX
-setTimeout(()=>{
+
 window.location.href = "admin-dashboard.html";
-},500);
+
 
 }else{
 
