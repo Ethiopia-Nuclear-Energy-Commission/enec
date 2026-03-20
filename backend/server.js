@@ -238,16 +238,36 @@ try {
 
 });
 // GET ALL NEWS (unchanged – now returns tiny JSON with Cloudinary URLs)
-// GET ALL NEWS 
-app.get("/news", async (req,res)=>{
-  try{
-    // Removed .select('-files') so the Cloudinary URLs are sent to the frontend
-    const news = await News.find().sort({date:-1}); 
-    
-    console.log(`Fetched ${news.length} news items`);
-    res.json(news);
+// GET ALL NEWS (Fixed: Protects frontend from old Base64 crashes)
+app.get("/news", async (req, res) => {
+  try {
+    // 1. Fetch all news from MongoDB
+    const news = await News.find().sort({ date: -1 });
 
-  }catch(error){
+    // 2. Clean the data to protect the frontend
+    const safeNews = news.map(doc => {
+      // Convert Mongoose document to a standard JavaScript object
+      const item = doc.toObject();
+
+      // 3. Filter the files array
+      if (item.files && Array.isArray(item.files)) {
+        item.files = item.files.filter(fileString => {
+          // ONLY keep files that are real URLs (Cloudinary). 
+          // This automatically destroys any old "data:image/..." Base64 strings.
+          return typeof fileString === 'string' && fileString.startsWith('http');
+        });
+      } else {
+        // Fallback: ensure 'files' is always an array so frontend loops don't crash
+        item.files = []; 
+      }
+
+      return item;
+    });
+
+    console.log(`Fetched ${safeNews.length} news items (Filtered heavy Base64)`);
+    res.json(safeNews);
+
+  } catch (error) {
     console.log("❌ Error fetching news:", error);
     res.status(500).send("Error fetching news");
   }
