@@ -716,36 +716,30 @@ cursor:pointer;
   color: #00e1ff;
 }
 
-/* MOBILE NAV FIX */
+/* MOBILE */
 @media (max-width: 768px) {
 
-  #nav-links {
+  .hamburger {
+    display: block;
+  }
+
+  .navbar nav {
+    display: none;
     position: absolute;
     top: 60px;
     right: 0;
+    width: 100%;
     background: #111a2b;
-    width: 100%;
-    
-    display: none;
     flex-direction: column;
-    align-items: center;
-
-    border-top: 1px solid #00e1ff33;
-
-    /* ✅ FIXES */
-    z-index: 9999;
-    padding: 10px 0;
-  }
-
-  #nav-links a {
-    margin: 12px 0;
-    display: block;
-    font-size: 18px;
-    width: 100%;
     text-align: center;
   }
 
-  #nav-links.active {
+  .navbar nav a {
+    display: block;
+    margin: 15px 0;
+  }
+
+  .navbar nav.active {
     display: flex;
   }
 }
