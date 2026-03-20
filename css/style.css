@@ -716,6 +716,12 @@ cursor:pointer;
   color: #00e1ff;
 }
 
+/* IMPORTANT FIX (prevents menu cut-off) */
+.navbar {
+  position: relative;
+  overflow: visible;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
 
@@ -726,9 +732,11 @@ cursor:pointer;
   .navbar nav {
     display: none;
     position: absolute;
-    top: 60px;
-    right: 0;
+
+    top: 100%;     /* ✅ FIX: instead of 60px */
+    left: 0;       /* ✅ better alignment */
     width: 100%;
+
     background: #111a2b;
     flex-direction: column;
     text-align: center;
