@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Dashboard | ENEC</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-nuclear: #8b5cf6;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-green);
+        }
+
+        .dashboard-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-top: 4px solid var(--accent-blue);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .kpi-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .kpi-card .trend {
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            margin-top: 0.5rem;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-card h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Roadmap Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .status-planned {
+            background: rgba(139, 92, 246, 0.2);
+            color: #c4b5fd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>☢ ENEC Energy Dashboard</h1>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="co2-model.html">CO₂ Model</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        
+        <div class="kpi-grid">
+            <div class="kpi-card" style="border-top-color: var(--accent-blue);">
+                <h3>Current Installed Capacity</h3>
+                <p class="value" id="total-capacity">5,200 MW</p>
+                <p class="trend">+5,150 MW pending (GERD Full Operation)</p>
+            </div>
+            <div class="kpi-card" style="border-top-color: var(--accent-nuclear);">
+                <h3>Target Nuclear Baseload (2040)</h3>
+                <p class="value">2,400 MW</p>
+                <p class="trend">Proposed 2x 1200MW VVER or SMR Cluster</p>
+            </div>
+            <div class="kpi-card" style="border-top-color: var(--accent-green);">
+                <h3>Grid Vulnerability Index</h3>
+                <p class="value">High</p>
+                <p class="trend" style="color: #ef4444;">90% dependence on seasonal rainfall</p>
+            </div>
+            <div class="kpi-card" style="border-top-color: #f59e0b;">
+                <h3>Est. CO₂ Avoided vs Coal</h3>
+                <p class="value">16M Tons/Yr</p>
+                <p class="trend">Upon full nuclear integration</p>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h2>Projected Energy Mix (2040 Target)</h2>
+                <canvas id="energyMixChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Baseload Demand vs. Generation Strategy</h2>
+                <canvas id="demandSupplyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2>Ethiopian Nuclear Integration Roadmap</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Facility Type</th>
+                        <th>Purpose</th>
+                        <th>Target Timeline</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Phase 1</td>
+                        <td>Center for Nuclear Science (CNST) & Research Reactor</td>
+                        <td>Medical isotopes, agriculture, workforce training</td>
+                        <td>2028 - 2030</td>
+                        <td><span class="status-planned">Feasibility / MoUs</span></td>
+                    </tr>
+                    <tr>
+                        <td>Phase 2</td>
+                        <td>Small Modular Reactor (SMR) Pilot</td>
+                        <td>Demonstrate safe baseload grid integration</td>
+                        <td>2032 - 2035</td>
+                        <td><span class="status-planned">Strategic Planning</span></td>
+                    </tr>
+                    <tr>
+                        <td>Phase 3</td>
+                        <td>Commercial Power Plant (e.g., 1200+ MW)</td>
+                        <td>Heavy industrialization & mass grid stability</td>
+                        <td>2038 - 2045</td>
+                        <td><span class="status-planned">Long-term Goal</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. Energy Mix Doughnut Chart ---
+        const ctxMix = document.getElementById('energyMixChart').getContext('2d');
+        const energyMixChart = new Chart(ctxMix, {
+            type: 'doughnut',
+            data: {
+                labels: ['Hydropower', 'Nuclear', 'Wind', 'Solar', 'Geothermal'],
+                datasets: [{
+                    data: [65, 15, 10, 5, 5], // Target percentages
+                    backgroundColor: [
+                        '#3b82f6', // Hydro (Blue)
+                        '#8b5cf6', // Nuclear (Purple)
+                        '#10b981', // Wind (Green)
+                        '#f59e0b', // Solar (Yellow)
+                        '#ef4444'  // Geothermal (Red)
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f8fafc' } }
+                }
+            }
+        });
+
+        // --- 2. Demand vs Supply Combo Chart ---
+        const ctxDemand = document.getElementById('demandSupplyChart').getContext('2d');
+        const demandSupplyChart = new Chart(ctxDemand, {
+            type: 'bar',
+            data: {
+                labels: ['2025', '2030', '2035', '2040', '2045', '2050'],
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Projected Peak Demand (MW)',
+                        data: [6000, 10000, 15000, 22000, 30000, 40000],
+                        borderColor: '#f59e0b',
+                        borderWidth: 3,
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Hydropower Capacity',
+                        data: [5200, 10350, 12000, 14000, 15000, 16000],
+                        backgroundColor: '#3b82f6'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Nuclear Baseload',
+                        data: [0, 0, 300, 2400, 4800, 7200], // Shows SMRs then full plants
+                        backgroundColor: '#8b5cf6'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Other Renewables (Wind/Solar)',
+                        data: [800, 1500, 3000, 5000, 7000, 10000],
+                        backgroundColor: '#10b981'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { stacked: true, ticks: { color: '#94a3b8' } },
+                    y: { 
+                        stacked: true, 
+                        ticks: { color: '#94a3b8' },
+                        title: { display: true, text: 'Megawatts (MW)', color: '#94a3b8' }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#f8fafc' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
