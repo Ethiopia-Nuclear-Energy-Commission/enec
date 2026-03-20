@@ -167,7 +167,11 @@ footer {
 
 <header class="navbar">
   <div class="logo">☢ Ethiopia Nuclear Energy Commission</div>
-  <nav>
+
+  <!-- Hamburger -->
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+  <nav id="nav-links">
     <a href="index.html">Home</a>
     <a href="dashboard.html">Dashboard</a>
     <a href="co2-model.html">CO₂ Model</a>
@@ -315,6 +319,11 @@ function openLightbox(src) {
 function closeLightbox() {
   document.getElementById("lightbox").style.display = "none";
 }
+
+function toggleMenu() {
+  document.getElementById("nav-links").classList.toggle("active");
+}
+
 </script>
 
 <!-- IMAGE LIGHTBOX -->
