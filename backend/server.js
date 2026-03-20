@@ -251,13 +251,16 @@ try {
 });
 
 // GET ALL NEWS (unchanged – now returns tiny JSON with Cloudinary URLs)
+// GET ALL NEWS – TEMPORARY FIX (ignores old base64 files)
 app.get("/news", async (req,res)=>{
 
 try{
 
-const news = await News.find().sort({date:-1});
+const news = await News.find()
+  .sort({date:-1})
+  .select('-files');   // ← THIS ONE LINE skips the heavy old data
 
-console.log(`Fetched ${news.length} news items`);
+console.log(`Fetched ${news.length} news items (files excluded for now)`);
 res.json(news);
 
 }catch(error){
