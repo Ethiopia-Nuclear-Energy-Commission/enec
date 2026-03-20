@@ -10,15 +10,11 @@ const News = require("./News"); // ✅ moved here
 const multer = require("multer");
 
 // ====================== CLOUDINARY INTEGRATION ======================
+// ====================== CLOUDINARY INTEGRATION ======================
 const cloudinary = require('cloudinary').v2;
 
-// Configure Cloudinary (reads from .env – add these variables on Render)
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
+// Uses the single CLOUDINARY_URL you just added (easiest & cleanest)
+cloudinary.config(process.env.CLOUDINARY_URL);
 // ====================== MULTER CHANGED TO MEMORY STORAGE (NO DISK) ======================
 const upload = multer({ storage: multer.memoryStorage() });
 
