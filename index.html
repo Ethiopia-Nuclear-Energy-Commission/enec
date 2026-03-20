@@ -28,6 +28,10 @@
 ☢ ENEC Platform
 </div>
 
+ <!-- NEW: Hamburger -->
+  <div class="hamburger" onclick="toggleMenu()">
+    ☰
+  </div>
 <nav>
 <a href="index.html">Home</a>
 <a href="news.html">News</a>
@@ -100,6 +104,12 @@ CO₂ Reduction Modeling and National Energy Strategy.
 <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
 <script src="js/particles.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+    function toggleMenu() {
+  document.getElementById("nav-links").classList.toggle("active");
+}
+</script>
 
 </body>
 </html>
