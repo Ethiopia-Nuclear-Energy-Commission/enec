@@ -9,6 +9,16 @@ const jwt = require("jsonwebtoken");
 const News = require("./News"); // ✅ moved here
 const multer = require("multer");
 
+// ====================== CLOUDINARY INTEGRATION ======================
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary (reads from .env – add these variables on Render)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 // ====================== MULTER CHANGED TO MEMORY STORAGE (NO DISK) ======================
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -179,53 +189,75 @@ return res.status(401).send("Invalid or expired token");
 
 }
 /* -----------------------------
-   NEWS API
+   NEWS API – NOW USING CLOUDINARY (images, videos, PDFs)
 ------------------------------*/
 
-// CREATE NEWS  ← UPDATED TO STORE IMAGES DIRECTLY IN MONGODB AS BASE64
+// CREATE NEWS – Uploads to Cloudinary, stores ONLY URLs in MongoDB
 app.post("/news", verifyAdmin, upload.array("files",10), async (req,res)=>{
 
 const {title,content} = req.body;
+const fileUrls = [];
 
-const imageDataUrls = [];
+try {
+  if (req.files && req.files.length > 0) {
+    for (const file of req.files) {
+      let resourceType = 'image'; // default
 
-if (req.files && req.files.length > 0) {
-  for (const file of req.files) {
-    const base64 = file.buffer.toString("base64");
-    const dataUrl = `data:${file.mimetype};base64,${base64}`;
-    imageDataUrls.push(dataUrl);
+      if (file.mimetype.startsWith('video/')) {
+        resourceType = 'video';
+      } else if (file.mimetype === 'application/pdf') {
+        resourceType = 'raw';
+      }
+
+      // Upload to Cloudinary using stream (works with memory buffer)
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: resourceType,
+            folder: 'enec-news',                    // organizes files in Cloudinary
+            public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
+            quality: 'auto:good',
+            fetch_format: 'auto'
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.end(file.buffer);
+      });
+
+      fileUrls.push(result.secure_url); // secure https URL
+    }
   }
-}
 
-try{
+  const news = new News({
+    title: title,
+    content: content,
+    files: fileUrls,           // ← only Cloudinary URLs (no base64)
+    date: new Date()           // ensures sorting works
+  });
 
-const news = new News({
-title:title,
-content:content,
-files: imageDataUrls   // ← now stores full image data inside MongoDB
-});
+  await news.save();
 
-await news.save();
+  console.log(`✅ News published with ${fileUrls.length} media files`);
+  res.json({message:"News published successfully"});
 
-res.json({message:"News published successfully"});
-
-}catch(error){
-
-console.log(error);
-res.status(500).send("Error publishing news");
-
+} catch(error){
+  console.error("❌ Upload/publish error:", error);
+  res.status(500).json({ error: "Error publishing news", details: error.message });
 }
 
 });
 
-
-// GET ALL NEWS (unchanged)
+// GET ALL NEWS (unchanged – now returns tiny JSON with Cloudinary URLs)
 app.get("/news", async (req,res)=>{
 
 try{
 
 const news = await News.find().sort({date:-1});
 
+console.log(`Fetched ${news.length} news items`);
 res.json(news);
 
 }catch(error){
