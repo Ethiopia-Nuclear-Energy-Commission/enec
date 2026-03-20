@@ -716,12 +716,8 @@ cursor:pointer;
   color: #00e1ff;
 }
 
-/* MOBILE NAV */
-@media (max-width: 768px) {
-
-  .hamburger {
-    display: block;
-  }
+/* MOBILE NAV *//* MOBILE NAV FIX */
+ @media (max-width: 768px) {
 
   #nav-links {
     position: absolute;
@@ -729,16 +725,24 @@ cursor:pointer;
     right: 0;
     background: #111a2b;
     width: 100%;
+    
+    display: none;
     flex-direction: column;
     align-items: center;
-    display: none;
+
     border-top: 1px solid #00e1ff33;
+
+    /* ✅ FIXES */
+    z-index: 9999;
+    padding: 10px 0;
   }
 
   #nav-links a {
-    margin: 15px 0;
+    margin: 12px 0;
     display: block;
     font-size: 18px;
+    width: 100%;
+    text-align: center;
   }
 
   #nav-links.active {
