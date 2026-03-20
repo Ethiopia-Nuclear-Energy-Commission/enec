@@ -722,11 +722,6 @@ cursor:pointer;
   .hamburger {
     display: block;
   margin-left: auto;
-  order: 2;
-
-  .logo {
-   order: 1;
-   }
   }
 
   .navbar {
