@@ -716,12 +716,6 @@ cursor:pointer;
   color: #00e1ff;
 }
 
-/* IMPORTANT FIX (prevents menu cut-off) */
-.navbar {
-  position: relative;
-  overflow: visible;
-}
-
 /* MOBILE */
 @media (max-width: 768px) {
 
@@ -729,17 +723,17 @@ cursor:pointer;
     display: block;
   }
 
+  .navbar {
+    flex-wrap: wrap; /* ✅ KEY FIX */
+  }
+
   .navbar nav {
-    display: none;
-    position: absolute;
-
-    top: 100%;     /* ✅ FIX: instead of 60px */
-    left: 0;       /* ✅ better alignment */
     width: 100%;
-
-    background: #111a2b;
+    display: none;
     flex-direction: column;
     text-align: center;
+
+    background: #111a2b;
   }
 
   .navbar nav a {
