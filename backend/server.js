@@ -188,7 +188,7 @@ return res.status(401).send("Invalid or expired token");
    NEWS API – NOW USING CLOUDINARY (images, videos, PDFs)
 ------------------------------*/
 
-// CREATE NEWS – Uploads to Cloudinary, stores ONLY URLs in MongoDB
+// CREATE NEWS – Cloudinary upload (fixed & proven method)
 app.post("/news", verifyAdmin, upload.array("files",10), async (req,res)=>{
 
 const {title,content} = req.body;
@@ -197,55 +197,46 @@ const fileUrls = [];
 try {
   if (req.files && req.files.length > 0) {
     for (const file of req.files) {
-      let resourceType = 'image'; // default
+      let resourceType = 'image';
 
-      if (file.mimetype.startsWith('video/')) {
-        resourceType = 'video';
-      } else if (file.mimetype === 'application/pdf') {
-        resourceType = 'raw';
-      }
+      if (file.mimetype.startsWith('video/')) resourceType = 'video';
+      else if (file.mimetype === 'application/pdf') resourceType = 'raw';
 
-      // Upload to Cloudinary using stream (works with memory buffer)
-      const result = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            resource_type: resourceType,
-            folder: 'enec-news',                    // organizes files in Cloudinary
-            public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
-            quality: 'auto:good',
-            fetch_format: 'auto'
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        );
-        uploadStream.end(file.buffer);
+      // Simpler & more reliable upload method (works perfectly with memoryStorage)
+      const base64String = file.buffer.toString('base64');
+      const dataUri = `data:${file.mimetype};base64,${base64String}`;
+
+      const result = await cloudinary.uploader.upload(dataUri, {
+        resource_type: resourceType,
+        folder: 'enec-news',
+        public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
+        quality: 'auto:good',
+        fetch_format: 'auto'
       });
 
-      fileUrls.push(result.secure_url); // secure https URL
+      fileUrls.push(result.secure_url);
+      console.log(`✅ Uploaded ${file.originalname} → ${result.secure_url}`);
     }
   }
 
   const news = new News({
     title: title,
     content: content,
-    files: fileUrls,           // ← only Cloudinary URLs (no base64)
-    date: new Date()           // ensures sorting works
+    files: fileUrls,
+    date: new Date()
   });
 
   await news.save();
 
-  console.log(`✅ News published with ${fileUrls.length} media files`);
+  console.log(`🎉 News published with ${fileUrls.length} Cloudinary files`);
   res.json({message:"News published successfully"});
 
 } catch(error){
-  console.error("❌ Upload/publish error:", error);
+  console.error("❌ Upload/publish error:", error.message);
   res.status(500).json({ error: "Error publishing news", details: error.message });
 }
 
 });
-
 // GET ALL NEWS (unchanged – now returns tiny JSON with Cloudinary URLs)
 // GET ALL NEWS – TEMPORARY FIX (ignores old base64 files)
 app.get("/news", async (req,res)=>{
