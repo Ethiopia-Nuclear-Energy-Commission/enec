@@ -117,6 +117,56 @@
         @media (max-width: 950px) {
             .main-container { grid-template-columns: 1fr; }
         }
+        /* LOGO IMAGE */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #00e1ff;
+  margin-left: auto;
+}
+
+/* MOBILE NAV FIX */
+@media (max-width: 768px) {
+
+  .hamburger {
+    display: block;
+  }
+
+  .navbar {
+    flex-wrap: wrap; /* ✅ VERY IMPORTANT */
+  }
+
+  .navbar nav {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    background: #111a2b;
+  }
+
+  .navbar nav a {
+    display: block;
+    margin: 15px 0;
+  }
+
+  .navbar nav.active {
+    display: flex;
+  }
+}
     </style>
 </head>
 <body>
