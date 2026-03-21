@@ -146,21 +146,79 @@
             border-radius: 4px;
             font-size: 0.8rem;
         }
+         /* LOGO IMAGE */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #00e1ff;
+  margin-left: auto;
+}
+
+/* MOBILE NAV FIX */
+@media (max-width: 768px) {
+
+  .hamburger {
+    display: block;
+  }
+
+  .navbar {
+    flex-wrap: wrap; /* ✅ VERY IMPORTANT */
+  }
+
+  .navbar nav {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    background: #111a2b;
+  }
+
+  .navbar nav a {
+    display: block;
+    margin: 15px 0;
+  }
+
+  .navbar nav.active {
+    display: flex;
+  }
+}
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>☢ ENEC Energy Dashboard</h1>
-        <div class="nav-links">
-         <a href="index.html" style="color:white; margin:0 12px; text-decoration:none;">Home</a>
-        <a href="energy-dashboard.html" style="color:rgb(0, 208, 255); margin:0 12px; text-decoration:none; font-weight:bold;">Energy Dashboard</a>
-        <a href="news.html" style="color:white; margin:0 12px; text-decoration:none;">News</a>
-        <a href="experts.html" style="color:white; margin:0 12px; text-decoration:none;">Experts</a>
-        <a href="co2-model.html" style="color:white; margin:0 12px; text-decoration:none;">CO₂ Model</a>
-        <a href="contact.html" style="color:white; margin:0 12px; text-decoration:none;">Contact</a>
-        </div>
-    </header>
+    <header class="navbar">
+  <div class="logo">
+      <img src="assets/LOGO.jpg" alt="ENEC Logo" class="logo-img">
+  Ethiopia Nuclear Energy Commission
+    </div> 
+
+  <!-- Hamburger -->
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+  <nav id="nav-links">
+    <a href="index.html">Home</a>
+    <a href="energy-dashboard.html">Energy Dashboard</a>
+    <a href="co2-model.html">CO₂ Model</a>
+    <a href="experts.html">Experts</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
 
     <div class="dashboard-container">
         
@@ -318,6 +376,10 @@
                 }
             }
         });
+
+            function toggleMenu() {
+            document.getElementById("nav-links").classList.toggle("active");
+            }
     </script>
 
     <footer>
