@@ -45,24 +45,27 @@
         header h1 { font-size: 1.5rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
         header h1 span { color: var(--nuclear-blue); }
 
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 2rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+        
+        .navbar {
+         background: #111a2b;
+         padding: 15px 30px;
+         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #00e1ff; }
+    .navbar a {
+    color: white; 
+    text-decoration: none;
+    margin-left: 15px;
+    }
+     .navbar a:hover{
+     color:#00eaff;
+    }
 
-        .nav-links a:hover { color: var(--nuclear-blue); }
-        .nav-links a.btn-join {
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--nuclear-blue);
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
-            border: 1px solid var(--nuclear-blue);
-        }
-
+    .logo {
+    color: #00e1ff;
+    font-family: Orbitron;
+    }
         /* --- Hero Section --- */
         .hero {
             padding: 7rem 5% 4rem;
@@ -274,6 +277,56 @@
             .form-group.full { grid-column: span 1; }
             .nav-links a:not(.btn-join) { display: none; }
         }
+         /* LOGO IMAGE */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #00e1ff;
+  margin-left: auto;
+}
+
+/* MOBILE NAV FIX */
+@media (max-width: 768px) {
+
+  .hamburger {
+    display: block;
+  }
+
+  .navbar {
+    flex-wrap: wrap; /* ✅ VERY IMPORTANT */
+  }
+
+  .navbar nav {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    background: #111a2b;
+  }
+
+  .navbar nav a {
+    display: block;
+    margin: 15px 0;
+  }
+
+  .navbar nav.active {
+    display: flex;
+  }
+}
     </style>
 </head>
 <body>
@@ -485,6 +538,10 @@
             alert('Application submitted successfully! (This will connect to your MongoDB backend)');
             e.target.reset();
         });
+
+         function toggleMenu() {
+         document.getElementById("nav-links").classList.toggle("active");
+           }
     </script>
 
     <footer>
