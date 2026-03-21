@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Experts Network | ENEC</title>
+    <style>
+        :root {
+            --bg-dark: #0b1120;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --eth-green: #10b981;
+            --eth-yellow: #f59e0b;
+            --eth-red: #ef4444;
+            --nuclear-blue: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, var(--bg-dark) 40%);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            background: rgba(11, 17, 32, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--nuclear-blue);
+            letter-spacing: 1px;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--eth-green); }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 5%;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--nuclear-blue), var(--eth-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Animated CTA Button */
+        .cta-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #000;
+            background: var(--eth-green);
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.7);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Live Counters Section */
+        .stats-container {
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover { transform: translateY(-5px); }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .counter {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0.5rem 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-label {
+            color: var(--nuclear-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        /* Registration Form Section */
+        .registration-section {
+            padding: 5rem 5%;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(15px);
+        }
+
+        .form-container h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .form-container p { color: var(--text-muted); margin-bottom: 2rem; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: span 2; }
+
+        label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select {
+            padding: 0.8rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus { border-color: var(--nuclear-blue); }
+
+        .submit-btn {
+            background: var(--nuclear-blue);
+            color: #0b1120;
+            border: none;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover { background: #7dd3fc; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero h2 { font-size: 2.2rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+            .nav-links { display: none; } /* Add a hamburger menu here later */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>☢ ENEC</h1>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="energy-dashboard.html">Dashboard</a>
+            <a href="#register">Join Network</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h2>Uniting Ethiopian Nuclear Talent Worldwide</h2>
+        <p>Whether you are a reactor physicist in Addis Ababa, a safety regulator in Vienna, or a nuclear medicine specialist in North America—your country needs your expertise to build a safe, sustainable energy future.</p>
+        <a href="#register" class="cta-btn">Join the National Registry</a>
+    </section>
+
+    <section class="stats-container" id="stats">
+        <div class="stat-card">
+            <div class="stat-icon">⚛️</div>
+            <div class="counter" data-target="42">0</div>
+            <div class="stat-label">Reactor Engineering & Physics</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🛡️</div>
+            <div class="counter" data-target="87">0</div>
+            <div class="stat-label">Radiation Safety & Regulatory</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚕️</div>
+            <div class="counter" data-target="156">0</div>
+            <div class="stat-label">Nuclear Medicine & Agriculture</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🌍</div>
+            <div class="counter" data-target="18">0</div>
+            <div class="stat-label">Countries Represented</div>
+        </div>
+    </section>
+
+    <section class="registration-section" id="register">
+        <div class="form-container">
+            <h3>Expert Registration Portal</h3>
+            <p>Join the official database to receive updates, consulting opportunities, and technical committee invitations.</p>
+            
+            <form id="expertForm" class="form-grid">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" required placeholder="Abebe">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" required placeholder="Kebede">
+                </div>
+                <div class="form-group full-width">
+                    <label>Professional Email</label>
+                    <input type="email" required placeholder="abebe@university.edu">
+                </div>
+                <div class="form-group">
+                    <label>Primary Discipline</label>
+                    <select required>
+                        <option value="">Select Discipline...</option>
+                        <option value="physics">Reactor Physics & Engineering</option>
+                        <option value="safety">Safeguards & Non-Proliferation</option>
+                        <option value="regulatory">Law & Regulatory Framework</option>
+                        <option value="medicine">Nuclear Medicine/Radiology</option>
+                        <option value="materials">Materials Science</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Highest Degree</label>
+                    <select required>
+                        <option value="">Select Level...</option>
+                        <option value="phd">Ph.D.</option>
+                        <option value="msc">M.Sc. / M.Eng.</option>
+                        <option value="bsc">B.Sc. / B.Eng.</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Current Country of Residence</label>
+                    <input type="text" required placeholder="e.g., Ethiopia, USA, France">
+                </div>
+                <div class="form-group">
+                    <label>LinkedIn Profile URL</label>
+                    <input type="url" placeholder="https://linkedin.com/in/...">
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="submit-btn">Submit Application to ENEC</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // Intersection Observer for triggering the number counter animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 100; // Lower is faster
+
+        const animateCounters = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        const inc = target / speed;
+
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + inc);
+                            setTimeout(updateCount, 15);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    
+                    updateCount();
+                    // Stop observing once animated so it doesn't repeat unnecessarily
+                    observer.unobserve(counter); 
+                }
+            });
+        };
+
+        const counterObserver = new IntersectionObserver(animateCounters, {
+            threshold: 0.5 // Trigger when 50% of the element is visible
+        });
+
+        counters.forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Optional: Simple Form Submit Handler to connect to backend later
+        document.getElementById('expertForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form processing ready! Wire this up to your Express/MongoDB backend.');
+            // In the future, write your fetch('/api/experts', { method: 'POST'... }) logic here.
+        });
+    </script>
+</body>
+</html>
