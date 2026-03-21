@@ -279,10 +279,13 @@
 <body>
 
     <header>
-        <h1>☢ <span>ENEC</span></h1>
+        <h1>☢ <span>Ethiopia Nuclear Energy Commission</span></h1>
         <div class="nav-links">
             <a href="index.html">Home</a>
-            <a href="energy-dashboard.html">Dashboard</a>
+            <a href="energy-dashboard.html">Energy Dashboard</a>
+            <a href="co2-model.html">CO₂ Model</a>
+            <a href="news.html">News</a>
+            <a href="contact.html">Contact</a>
             <a href="#roster">Directory</a>
             <a href="#register" class="btn-join">Join Registry</a>
         </div>
@@ -358,15 +361,15 @@
         <div class="form-container">
             <div class="section-header">
                 <h3>Join the National Registry</h3>
-                <p>Contribute your expertise to Ethiopia's energy independence.</p>
+                <p>Contribute your expertise to Ethiopia's Nuclear Energy development.</p>
             </div>
             <form id="expertForm" class="form-grid">
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" required placeholder="Dr. Abebe Kebede">
+                    <input type="text" required placeholder=" Abebe Kebede Bekele">
                 </div>
                 <div class="form-group">
-                    <label>Current Location (Country)</label>
+                    <label>Current Location (Country of Residence)</label>
                     <input type="text" required placeholder="e.g., Canada">
                 </div>
                 <div class="form-group full">
@@ -381,6 +384,15 @@
                         <option value="policy">Regulatory & Safeguards</option>
                         <option value="medicine">Nuclear Medicine</option>
                         <option value="materials">Materials Science</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Highest Degree</label>
+                    <select required>
+                        <option value="">Select...</option>
+                        <option value="BSc">Bachelor of science degree (BSc) </option>
+                        <option value="MSc.">Master of science degree (MSc) </option>
+                        <option value="PHD">Doctor of philosophy degree (PHD) </option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -474,5 +486,12 @@
             e.target.reset();
         });
     </script>
+
+    <footer>
+
+     <p style="text-align: center; "> ©2026 Ethiopian Nuclear Energy Commission Platform</p>
+
+
+    </footer>
 </body>
 </html>
