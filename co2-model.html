@@ -263,22 +263,53 @@
 </footer>
 
 <script>
-// Chart & Calculation code (same powerful engine, just updated labels)
 let chart;
+
 function createChart(labels, annualData, cumulativeData) {
     const ctx = document.getElementById('co2Chart');
+
     if (chart) chart.destroy();
-    
+
     chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [
-                { label: 'Annual CO₂ Avoided (Mt)', data: annualData, borderColor: '#00e1ff', tension: 0.3, borderWidth: 3 },
-                { label: 'Cumulative CO₂ Avoided (Mt)', data: cumulativeData, borderColor: '#00ff9d', tension: 0.3, borderWidth: 3, yAxisID: 'y1' }
+                {
+                    label: 'Annual CO₂ Avoided (Mt)',
+                    data: annualData,
+                    borderColor: '#00e1ff',
+                    tension: 0.4,
+                    borderWidth: 3,
+                    fill: false
+                },
+                {
+                    label: 'Cumulative CO₂ Avoided (Mt)',
+                    data: cumulativeData,
+                    borderColor: '#00ff9d',
+                    tension: 0.4,
+                    borderWidth: 3,
+                    yAxisID: 'y1'
+                }
             ]
         },
-        options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { position: 'top' }
+            },
+            scales: {
+                y: {
+                    title: { display: true, text: 'Annual (Mt)' }
+                },
+                y1: {
+                    position: 'right',
+                    title: { display: true, text: 'Cumulative (Mt)' },
+                    grid: { drawOnChartArea: false }
+                }
+            }
+        }
     });
 }
 
@@ -288,69 +319,87 @@ function calculate() {
     const horizon = parseFloat(document.getElementById('years').value);
     const ef = parseFloat(document.getElementById('source').value);
 
-    const annualGWh = (capacity * 8760 * cf) / 1000;
-    const annualMt = (annualGWh * ef) / 1_000_000;
-    const cumulativeMt = annualMt * horizon;
+    // ⚡ Realistic production
+    const fullAnnualGWh = (capacity * 8760 * cf) / 1000;
 
-    const carsPerYear = Math.round(annualMt * 1_000_000 / 4.6);
-    const treesTotal = Math.round(cumulativeMt * 1_000_000 / 22);
-
-    document.getElementById('energy').textContent = annualGWh.toFixed(0) + " GWh/year";
-    document.getElementById('annual').textContent = annualMt.toFixed(2) + " million tons";
-    document.getElementById('cumulative').textContent = cumulativeMt.toFixed(1) + " million tons";
-    document.getElementById('cars').textContent = carsPerYear.toLocaleString() + " cars/year";
-    document.getElementById('trees').textContent = (treesTotal / 1_000_000).toFixed(2) + " million trees";
-
-    // Chart
-    const years = [];
+    const labels = [];
     const annualData = [];
     const cumulativeData = [];
-    let total = 0;
+
+    let cumulative = 0;
+
     for (let i = 0; i < horizon; i++) {
         const year = 2026 + i;
-        years.push(year);
-        annualData.push(annualMt);
-        total += annualMt;
-        cumulativeData.push(parseFloat(total.toFixed(1)));
+        labels.push(year);
+
+        let productionFactor;
+
+        // 🧠 REALISTIC DEPLOYMENT MODEL
+        if (i < 3) {
+            productionFactor = 0; // construction phase
+        } else if (i < 7) {
+            productionFactor = (i - 2) / 5; // ramp-up
+        } else {
+            productionFactor = 1; // full capacity
+        }
+
+        const annualGWh = fullAnnualGWh * productionFactor;
+        const annualMt = (annualGWh * ef) / 1_000_000;
+
+        cumulative += annualMt;
+
+        annualData.push(parseFloat(annualMt.toFixed(2)));
+        cumulativeData.push(parseFloat(cumulative.toFixed(2)));
     }
-    createChart(years, annualData, cumulativeData);
+
+    // UI values (final year)
+    const finalAnnual = annualData[annualData.length - 1];
+    const finalCumulative = cumulativeData[cumulativeData.length - 1];
+
+    const carsPerYear = Math.round(finalAnnual * 1_000_000 / 4.6);
+    const treesTotal = Math.round(finalCumulative * 1_000_000 / 22);
+
+    document.getElementById('energy').textContent =
+        fullAnnualGWh.toFixed(0) + " GWh/year";
+
+    document.getElementById('annual').textContent =
+        finalAnnual.toFixed(2) + " million tons";
+
+    document.getElementById('cumulative').textContent =
+        finalCumulative.toFixed(1) + " million tons";
+
+    document.getElementById('cars').textContent =
+        carsPerYear.toLocaleString() + " cars/year";
+
+    document.getElementById('trees').textContent =
+        (treesTotal / 1_000_000).toFixed(2) + " million trees";
+
+    createChart(labels, annualData, cumulativeData);
 }
 
-// Live updates
+// Live update
 document.querySelectorAll('input, select').forEach(el => {
     el.addEventListener('input', () => {
-        document.getElementById('capacityVal').textContent = document.getElementById('capacity').value + " MW";
-        document.getElementById('cfVal').textContent = document.getElementById('cf').value + "%";
-        document.getElementById('yearsVal').textContent = document.getElementById('years').value + " years (to " + (2026 + parseFloat(document.getElementById('years').value)) + ")";
+        document.getElementById('capacityVal').textContent =
+            document.getElementById('capacity').value + " MW";
+
+        document.getElementById('cfVal').textContent =
+            document.getElementById('cf').value + "%";
+
+        document.getElementById('yearsVal').textContent =
+            document.getElementById('years').value +
+            " years (to " +
+            (2026 + parseFloat(document.getElementById('years').value)) + ")";
+
         calculate();
     });
 });
 
-function exportCSV() { /* same as before */ 
-    const csv = `ENEC Ethiopia CO₂ Model\nCapacity,${document.getElementById('capacity').value} MW\nHorizon,${document.getElementById('years').value} years\nAnnual Avoided,${document.getElementById('annual').textContent}\nCumulative,${document.getElementById('cumulative').textContent}\nDate,${new Date().toISOString().split('T')[0]}`;
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `ENEC_CO2_Ethiopia_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-}
-
-function resetToDefault() {
-    document.getElementById('capacity').value = 1200;
-    document.getElementById('cf').value = 92;
-    document.getElementById('years').value = 15;
-    document.getElementById('source').value = 350;
-    document.getElementById('capacityVal').textContent = "1200 MW";
-    document.getElementById('cfVal').textContent = "92%";
-    document.getElementById('yearsVal').textContent = "15 years (to 2041)";
-    calculate();
+function toggleMenu() {
+    document.getElementById("nav-links").classList.toggle("active");
 }
 
 window.onload = calculate;
-
-    function toggleMenu() {
-  document.getElementById("nav-links").classList.toggle("active");
-}
 </script>
 </body>
 </html>
