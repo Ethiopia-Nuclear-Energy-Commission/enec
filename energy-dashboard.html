@@ -23,34 +23,41 @@
             color: var(--text-main);
         }
 
-         .navbar a:hover{
-          color:#00eaff;
-         }
-         
-         .logo {
-           color: #00e1ff;
-          font-family: Orbitron;
-         }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--cyan);
-            text-align: center;
-            margin-bottom: 8px;
+        header {
+            background-color: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
         }
 
-        .nav-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-size: 0.9rem;
-            transition: color 0.3s;
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: rgb(10, 241, 233);
         }
 
-        .nav-links a:hover {
-        color: var(--nuclear-blue);
-        }
+        .navbar {
+         background: #111a2b;
+         padding: 15px 30px;
+         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #00e1ff; }
+    .navbar a {
+    color: white; 
+    text-decoration: none;
+    margin-left: 15px;
+    }
+     .navbar a:hover{
+     color:#00eaff;
+    }
 
+    .logo {
+    color: #00e1ff;
+    font-family: Orbitron;
+    }
         .dashboard-container {
             padding: 2rem;
             max-width: 1400px;
