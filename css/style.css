@@ -746,3 +746,17 @@ cursor:pointer;
     display: flex;
   }
 }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Orbitron', sans-serif;
+  color: var(--cyan);
+}
+
+/* LOGO IMAGE */
+.logo-img {
+  width: 32px;   /* 🔥 perfect icon size */
+  height: 32px;
+  object-fit: contain;
+}
