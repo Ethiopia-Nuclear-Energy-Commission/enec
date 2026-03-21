@@ -6,9 +6,9 @@
     <title>Global Experts Network | ENEC</title>
     <style>
         :root {
-            --bg-dark: #0b1120;
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-dark: #070b14;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(56, 189, 248, 0.2);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --eth-green: #10b981;
@@ -17,24 +17,21 @@
             --nuclear-blue: #38bdf8;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, var(--bg-dark) 40%);
+            background: radial-gradient(circle at top right, #172554, var(--bg-dark) 50%);
+            background-attachment: fixed;
             color: var(--text-main);
-            min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Navigation */
+        /* --- Navigation --- */
         header {
-            background: rgba(11, 17, 32, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(7, 11, 20, 0.85);
+            backdrop-filter: blur(12px);
             padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
@@ -45,328 +42,436 @@
             border-bottom: 1px solid var(--glass-border);
         }
 
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--nuclear-blue);
-            letter-spacing: 1px;
-        }
+        header h1 { font-size: 1.5rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        header h1 span { color: var(--nuclear-blue); }
 
         .nav-links a {
-            color: var(--text-main);
+            color: var(--text-muted);
             text-decoration: none;
             margin-left: 2rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            transition: color 0.3s ease;
+            transition: color 0.3s;
         }
 
-        .nav-links a:hover { color: var(--eth-green); }
+        .nav-links a:hover { color: var(--nuclear-blue); }
+        .nav-links a.btn-join {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--nuclear-blue);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            border: 1px solid var(--nuclear-blue);
+        }
 
-        /* Hero Section */
+        /* --- Hero Section --- */
         .hero {
-            padding: 6rem 5%;
+            padding: 7rem 5% 4rem;
             text-align: center;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
-        .hero h2 {
-            font-size: 3rem;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, var(--nuclear-blue), var(--eth-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .tagline {
+            color: var(--eth-green);
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: block;
         }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h2 span { color: var(--nuclear-blue); }
 
         .hero p {
             font-size: 1.2rem;
             color: var(--text-muted);
             margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* Animated CTA Button */
-        .cta-btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #000;
-            background: var(--eth-green);
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-            transition: all 0.3s ease;
-            animation: pulse 2s infinite;
-        }
-
-        .cta-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.7);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        /* Live Counters Section */
+        /* --- Live Counters --- */
         .stats-container {
-            padding: 4rem 5%;
+            padding: 2rem 5%;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border-top: 3px solid var(--nuclear-blue);
+        }
+
+        .counter {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- NEW: Strategic Task Forces --- */
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-header h3 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .section-header p { color: var(--text-muted); }
+
+        .task-forces {
+            padding: 4rem 5%;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .tf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .stat-card {
+        .tf-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
+            border: 1px solid #1e293b;
             padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
+            border-radius: 12px;
+            transition: all 0.3s;
         }
 
-        .stat-card:hover { transform: translateY(-5px); }
-
-        .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .counter {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin: 0.5rem 0;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .stat-label {
-            color: var(--nuclear-blue);
+        .tf-card:hover { border-color: var(--nuclear-blue); transform: translateY(-5px); }
+        .tf-card h4 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--nuclear-blue); }
+        .tf-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .tf-card .badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--eth-green);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
         }
 
-        /* Registration Form Section */
-        .registration-section {
+        /* --- NEW: Interactive Expert Directory --- */
+        .directory-section { padding: 5rem 5%; max-width: 1200px; margin: 0 auto; }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #334155;
+            color: var(--text-muted);
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--nuclear-blue);
+            color: #000;
+            border-color: var(--nuclear-blue);
+        }
+
+        .expert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .expert-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .expert-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 2px solid var(--nuclear-blue);
+        }
+
+        .expert-info h5 { font-size: 1.1rem; margin-bottom: 0.2rem; }
+        .expert-info .role { color: var(--nuclear-blue); font-size: 0.85rem; margin-bottom: 0.2rem; }
+        .expert-info .location { color: var(--text-muted); font-size: 0.8rem; }
+
+        /* --- Registration Form --- */
+        .register-wrap {
             padding: 5rem 5%;
-            background: rgba(0,0,0,0.2);
+            background: linear-gradient(to top, rgba(56, 189, 248, 0.05), transparent);
         }
 
         .form-container {
             max-width: 800px;
             margin: 0 auto;
-            background: var(--glass-bg);
+            background: rgba(15, 23, 42, 0.8);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 3rem;
-            backdrop-filter: blur(15px);
         }
 
-        .form-container h3 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-main);
-        }
-
-        .form-container p { color: var(--text-muted); margin-bottom: 2rem; }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group.full-width { grid-column: span 2; }
-
-        label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
+        .form-group.full { grid-column: span 2; }
+        
+        label { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; }
         input, select {
-            padding: 0.8rem 1rem;
-            background: rgba(15, 23, 42, 0.6);
+            padding: 0.9rem;
+            background: #0b1120;
             border: 1px solid #334155;
             border-radius: 8px;
             color: white;
-            font-size: 1rem;
             outline: none;
-            transition: border-color 0.3s;
         }
-
         input:focus, select:focus { border-color: var(--nuclear-blue); }
 
         .submit-btn {
-            background: var(--nuclear-blue);
-            color: #0b1120;
+            background: var(--eth-green);
+            color: #000;
             border: none;
-            padding: 1rem;
+            padding: 1.2rem;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             margin-top: 1rem;
         }
+        .submit-btn:hover { background: #059669; transform: translateY(-2px); }
 
-        .submit-btn:hover { background: #7dd3fc; }
-
-        /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            .hero h2 { font-size: 2.2rem; }
+            .hero h2 { font-size: 2.5rem; }
             .form-grid { grid-template-columns: 1fr; }
-            .form-group.full-width { grid-column: span 1; }
-            .nav-links { display: none; } /* Add a hamburger menu here later */
+            .form-group.full { grid-column: span 1; }
+            .nav-links a:not(.btn-join) { display: none; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>☢ ENEC</h1>
+        <h1>☢ <span>ENEC</span></h1>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="energy-dashboard.html">Dashboard</a>
-            <a href="#register">Join Network</a>
+            <a href="#roster">Directory</a>
+            <a href="#register" class="btn-join">Join Registry</a>
         </div>
     </header>
 
     <section class="hero">
-        <h2>Uniting Ethiopian Nuclear Talent Worldwide</h2>
-        <p>Whether you are a reactor physicist in Addis Ababa, a safety regulator in Vienna, or a nuclear medicine specialist in North America—your country needs your expertise to build a safe, sustainable energy future.</p>
-        <a href="#register" class="cta-btn">Join the National Registry</a>
+        <span class="tagline">National Brain Trust Initiative</span>
+        <h2>Uniting Ethiopian Nuclear Talent <span>Worldwide</span></h2>
+        <p>A central repository connecting Ethiopian diaspora and local experts to collaborate, advise, and shape the future of Ethiopia's peaceful nuclear energy program.</p>
     </section>
 
-    <section class="stats-container" id="stats">
+    <section class="stats-container">
         <div class="stat-card">
-            <div class="stat-icon">⚛️</div>
-            <div class="counter" data-target="42">0</div>
-            <div class="stat-label">Reactor Engineering & Physics</div>
+            <div class="counter" data-target="142">0</div>
+            <div class="stat-label">Registered Experts</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon">🛡️</div>
-            <div class="counter" data-target="87">0</div>
-            <div class="stat-label">Radiation Safety & Regulatory</div>
+            <div class="counter" data-target="28">0</div>
+            <div class="stat-label">Ph.D. Level Scientists</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon">⚕️</div>
-            <div class="counter" data-target="156">0</div>
-            <div class="stat-label">Nuclear Medicine & Agriculture</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🌍</div>
-            <div class="counter" data-target="18">0</div>
+            <div class="counter" data-target="14">0</div>
             <div class="stat-label">Countries Represented</div>
         </div>
+        <div class="stat-card">
+            <div class="counter" data-target="4">0</div>
+            <div class="stat-label">Active Task Forces</div>
+        </div>
     </section>
 
-    <section class="registration-section" id="register">
+    <section class="task-forces">
+        <div class="section-header">
+            <h3>Active Working Groups</h3>
+            <p>Where our experts apply their knowledge to national strategy.</p>
+        </div>
+        <div class="tf-grid">
+            <div class="tf-card">
+                <h4>Grid Integration & SMRs</h4>
+                <p>Focuses on feasibility studies for integrating Small Modular Reactors into the existing hydro-dominated national grid.</p>
+                <span class="badge">32 Members</span>
+            </div>
+            <div class="tf-card">
+                <h4>Regulatory & Safety Framework</h4>
+                <p>Drafting policies compliant with IAEA standards to ensure robust radiation protection and national safeguards.</p>
+                <span class="badge">45 Members</span>
+            </div>
+            <div class="tf-card">
+                <h4>Nuclear Medicine & Agrotech</h4>
+                <p>Applying isotope technology to advance cancer treatment facilities and improve drought-resistant crop yields.</p>
+                <span class="badge">51 Members</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="directory-section" id="roster">
+        <div class="section-header">
+            <h3>Expert Directory</h3>
+            <p>Browse our network of registered professionals.</p>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterExperts('all')">All Disciplines</button>
+            <button class="filter-btn" onclick="filterExperts('physics')">Reactor Physics</button>
+            <button class="filter-btn" onclick="filterExperts('policy')">Policy & Regulation</button>
+            <button class="filter-btn" onclick="filterExperts('medicine')">Medicine</button>
+        </div>
+
+        <div class="expert-grid" id="expertGrid">
+            </div>
+    </section>
+
+    <section class="register-wrap" id="register">
         <div class="form-container">
-            <h3>Expert Registration Portal</h3>
-            <p>Join the official database to receive updates, consulting opportunities, and technical committee invitations.</p>
-            
+            <div class="section-header">
+                <h3>Join the National Registry</h3>
+                <p>Contribute your expertise to Ethiopia's energy independence.</p>
+            </div>
             <form id="expertForm" class="form-grid">
                 <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" required placeholder="Abebe">
+                    <label>Full Name</label>
+                    <input type="text" required placeholder="Dr. Abebe Kebede">
                 </div>
                 <div class="form-group">
-                    <label>Last Name</label>
-                    <input type="text" required placeholder="Kebede">
+                    <label>Current Location (Country)</label>
+                    <input type="text" required placeholder="e.g., Canada">
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group full">
                     <label>Professional Email</label>
-                    <input type="email" required placeholder="abebe@university.edu">
+                    <input type="email" required placeholder="email@university.edu">
                 </div>
                 <div class="form-group">
                     <label>Primary Discipline</label>
                     <select required>
-                        <option value="">Select Discipline...</option>
-                        <option value="physics">Reactor Physics & Engineering</option>
-                        <option value="safety">Safeguards & Non-Proliferation</option>
-                        <option value="regulatory">Law & Regulatory Framework</option>
-                        <option value="medicine">Nuclear Medicine/Radiology</option>
+                        <option value="">Select...</option>
+                        <option value="physics">Reactor Physics / Engineering</option>
+                        <option value="policy">Regulatory & Safeguards</option>
+                        <option value="medicine">Nuclear Medicine</option>
                         <option value="materials">Materials Science</option>
-                        <option value="other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Highest Degree</label>
-                    <select required>
-                        <option value="">Select Level...</option>
-                        <option value="phd">Ph.D.</option>
-                        <option value="msc">M.Sc. / M.Eng.</option>
-                        <option value="bsc">B.Sc. / B.Eng.</option>
-                    </select>
+                    <label>Current Institution / Employer</label>
+                    <input type="text" required placeholder="e.g., IAEA, MIT, EEP">
                 </div>
-                <div class="form-group">
-                    <label>Current Country of Residence</label>
-                    <input type="text" required placeholder="e.g., Ethiopia, USA, France">
-                </div>
-                <div class="form-group">
+                <div class="form-group full">
                     <label>LinkedIn Profile URL</label>
                     <input type="url" placeholder="https://linkedin.com/in/...">
                 </div>
-                <div class="form-group full-width">
-                    <button type="submit" class="submit-btn">Submit Application to ENEC</button>
+                <div class="form-group full">
+                    <button type="submit" class="submit-btn">Submit Profile to ENEC</button>
                 </div>
             </form>
         </div>
     </section>
 
     <script>
-        // Intersection Observer for triggering the number counter animation
+        // --- 1. Live Counters Animation ---
         const counters = document.querySelectorAll('.counter');
-        const speed = 100; // Lower is faster
-
         const animateCounters = (entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const counter = entry.target;
-                    
                     const updateCount = () => {
                         const target = +counter.getAttribute('data-target');
                         const count = +counter.innerText;
-                        const inc = target / speed;
-
+                        const inc = target / 50; // Speed control
                         if (count < target) {
                             counter.innerText = Math.ceil(count + inc);
-                            setTimeout(updateCount, 15);
+                            setTimeout(updateCount, 20);
                         } else {
                             counter.innerText = target;
                         }
                     };
-                    
                     updateCount();
-                    // Stop observing once animated so it doesn't repeat unnecessarily
                     observer.unobserve(counter); 
                 }
             });
         };
+        const counterObserver = new IntersectionObserver(animateCounters, { threshold: 0.5 });
+        counters.forEach(counter => counterObserver.observe(counter));
 
-        const counterObserver = new IntersectionObserver(animateCounters, {
-            threshold: 0.5 // Trigger when 50% of the element is visible
-        });
+        // --- 2. Interactive Expert Directory Logic ---
+        // Dummy data - In production, this will be fetched from your MongoDB via Render API
+        const expertsData = [
+            { name: "Dr. Dawit T.", role: "Senior Reactor Physicist", location: "United States", category: "physics", initials: "DT" },
+            { name: "Prof. Selamawit G.", role: "Radiation Safety Lead", location: "Vienna, Austria", category: "policy", initials: "SG" },
+            { name: "Dr. Bereket M.", role: "Nuclear Medicine Specialist", location: "Addis Ababa, ETH", category: "medicine", initials: "BM" },
+            { name: "Eng. Yonatan K.", role: "SMR Systems Engineer", location: "South Korea", category: "physics", initials: "YK" },
+            { name: "Mekdes A., Esq.", role: "Nuclear Policy Advisor", location: "Geneva, CHE", category: "policy", initials: "MA" },
+            { name: "Dr. Helen T.", role: "Radiobiologist", location: "Canada", category: "medicine", initials: "HT" }
+        ];
 
-        counters.forEach(counter => {
-            counterObserver.observe(counter);
-        });
+        const grid = document.getElementById('expertGrid');
 
-        // Optional: Simple Form Submit Handler to connect to backend later
-        document.getElementById('expertForm').addEventListener('submit', function(e) {
+        function renderExperts(category) {
+            grid.innerHTML = '';
+            const filtered = category === 'all' ? expertsData : expertsData.filter(e => e.category === category);
+            
+            filtered.forEach(expert => {
+                grid.innerHTML += `
+                    <div class="expert-card">
+                        <div class="expert-avatar">${expert.initials}</div>
+                        <div class="expert-info">
+                            <h5>${expert.name}</h5>
+                            <p class="role">${expert.role}</p>
+                            <p class="location">📍 ${expert.location}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterExperts(category) {
+            // Update active button styling
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Re-render grid
+            renderExperts(category);
+        }
+
+        // Initial render
+        renderExperts('all');
+
+        // --- 3. Form Submission Mock ---
+        document.getElementById('expertForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Form processing ready! Wire this up to your Express/MongoDB backend.');
-            // In the future, write your fetch('/api/experts', { method: 'POST'... }) logic here.
+            alert('Application submitted successfully! (This will connect to your MongoDB backend)');
+            e.target.reset();
         });
     </script>
 </body>
